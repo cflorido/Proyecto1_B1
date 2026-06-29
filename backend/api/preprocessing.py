@@ -15,7 +15,8 @@ import re
 import joblib
 
 BASE_DIR = Path(__file__).resolve().parent
-vectorizer = joblib.load(BASE_DIR / "vectorizer.joblib")
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
+vectorizer = joblib.load(ARTIFACTS_DIR / "vectorizer.joblib")
 
 def vectorization_function_transform(x):
     return vectorizer.transform(x).toarray()

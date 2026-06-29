@@ -9,8 +9,9 @@ from sklearn.model_selection import train_test_split
 from typing import List
 
 BASE_DIR = Path(__file__).resolve().parent
-PIPELINE_PATH = BASE_DIR / "pipeline.joblib"
-MODEL_PATH = BASE_DIR / "model.joblib"
+ARTIFACTS_DIR = BASE_DIR / "artifacts"
+PIPELINE_PATH = ARTIFACTS_DIR / "pipeline.joblib"
+MODEL_PATH = ARTIFACTS_DIR / "model.joblib"
 
 pipeline = load(PIPELINE_PATH)
 

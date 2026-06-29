@@ -27,7 +27,7 @@ def classify_page():
 @app.route('/classify-file')
 @app.route('/clasificarArchivo')
 def classify_file_page():
-    return render_template('classify_file.html')
+    return render_template('classify_batch.html')
 
 @app.route('/retrain')
 @app.route('/reentreno')
@@ -114,7 +114,7 @@ def classify_file_submit():
     except requests.exceptions.RequestException:
         return jsonify({"error": "No se pudo conectar con la API"}), 500
 
-    return render_template('classify_file.html', results=response_list)
+    return render_template('classify_batch.html', results=response_list)
 
 @app.route('/retrain-submit', methods=["POST"])
 @app.route('/reentrenar', methods=["POST"])
