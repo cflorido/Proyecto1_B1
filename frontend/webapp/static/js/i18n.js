@@ -56,7 +56,12 @@ const translations = {
     "retrain.val_metrics": "Validation Metrics",
     "retrain.recall": "Recall",
     "retrain.precision": "Precision",
-    "retrain.accuracy": "Accuracy"
+    "retrain.accuracy": "Accuracy",
+    "processing.title": "Processing request",
+    "processing.default": "We are analyzing the information. This can take a few seconds.",
+    "processing.classify": "Classifying article, please wait...",
+    "processing.classify_file": "Classifying file, please wait...",
+    "processing.retrain": "Retraining model, please wait..."
   },
   es: {}
 };
@@ -84,6 +89,36 @@ function setLanguage(lang) {
   try { localStorage.setItem('lang', lang); } catch (e) {}
 }
 
+function showProcessingOverlay(messageKey) {
+  const overlay = document.getElementById('processing-overlay');
+  const messageEl = document.getElementById('processing-message');
+  if (!overlay || !messageEl) return;
+
+  const lang = localStorage.getItem('lang') || detectBrowserLang();
+  const message = translations[lang] && translations[lang][messageKey]
+    ? translations[lang][messageKey]
+    : null;
+
+  if (message) {
+    messageEl.textContent = message;
+  }
+
+  overlay.classList.remove('d-none');
+}
+
+function wireProcessingForms() {
+  document.querySelectorAll('.js-processing-form').forEach(form => {
+    form.addEventListener('submit', () => {
+      const messageKey = form.getAttribute('data-loading-key') || 'processing.default';
+      const submitButton = form.querySelector('button[type="submit"]');
+      if (submitButton) {
+        submitButton.setAttribute('disabled', 'disabled');
+      }
+      showProcessingOverlay(messageKey);
+    });
+  });
+}
+
 // Load language on start
 document.addEventListener('DOMContentLoaded', () => {
   const stored = localStorage.getItem('lang');
@@ -91,4 +126,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const selector = document.getElementById('lang-select');
   if (selector) selector.value = lang;
   setLanguage(lang);
+  wireProcessingForms();
 });

@@ -3,11 +3,11 @@
 {% block title %}Clasificar - Text Analytics{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <div class="row">
-            <h1 class="text-center" data-i18n="classify.title">Clasificador</h1>
-            <br>
-            <div class="col-md-4">
+    <div class="container-xxl page-shell">
+        <div class="row g-4 align-items-center">
+            <h1 class="text-center mb-3" data-i18n="classify.title">Clasificador</h1>
+            <div class="col-lg-5">
+                <div class="info-panel">
                 <h2 data-i18n="classify.instructions">Instrucciones</h2>
                 <p data-i18n="classify.follow_steps">Por favor, sigue estos pasos para clasificar la noticia:</p>
                 <ol class="text-start d-inline-block">
@@ -15,19 +15,16 @@
                     <li data-i18n="classify.step_body">Escribe el cuerpo completo de la noticia en el segundo campo.</li>
                     <li data-i18n="classify.step_click">Haz clic en el botón <strong data-i18n="classify.button">Clasificar</strong> para obtener el resultado.</li>
                 </ol>
+                </div>
             </div>
 
-            <div class="col-md-4 text-end">
-                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid" width="300">
-            </div>
-
-            <div class="col-md-4 text-end">
-                <br>
+            <div class="col-lg-7 text-center">
+                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid hero-robot" width="300">
             </div>
         </div>
-        <h2 class="text-center" data-i18n="classify.enter">Ingrese</h2>
-        <br>
-        <form action="/classify-submit" method="POST">
+
+        <h2 class="text-center mt-4" data-i18n="classify.enter">Ingrese</h2>
+        <form action="/classify-submit" method="POST" class="app-form mt-3 js-processing-form" data-loading-key="processing.classify">
             <h3 class="text-left" data-i18n="classify.field_id">ID de la Noticia</h3>
             <div class="mb-3">
                 <input type="text" class="form-control" name="id" value="ID" >
@@ -51,10 +48,9 @@
             <div class="text-center">
                 <button type="submit" class="btn btn-custom" data-i18n="classify.button">Clasificar</button>
             </div>
-            <br>
         </form>
         {% if results %}
-            <div class="card shadow-lg p-4 mt-4">
+            <div class="card app-card shadow-lg p-4 mt-4">
                 <h2 class="text-center mb-4" data-i18n="classify.results">Resultados de la Clasificación</h2>
                 <div class="mb-3">
                     <h4 class="fw-bold text-dark" data-i18n="classify.title_label">Título:</h4>
@@ -66,7 +62,7 @@
                 </div>
                 <div class="mb-3">
                     <h4 class="fw-bold text-dark" data-i18n="classify.class_label">Clasificación:</h4>
-                    <p class="{{ 'text-success' if results.clasificacion == 'Verdadero' else 'text-danger' }}">
+                    <p class="{{ 'text-success' if results.clasificacion == 'Verdadero' else 'text-danger' }} result-chip {{ 'result-chip-ok' if results.clasificacion == 'Verdadero' else 'result-chip-bad' }}">
                         <strong>{{ results.clasificacion }}</strong>
                     </p>
                 </div>

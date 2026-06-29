@@ -3,11 +3,11 @@
 {% block title %}Reentrenar - Text Analytics{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        <div class="row">
+    <div class="container-xxl page-shell">
+        <div class="row g-4 align-items-center">
             <h1 class="text-center" data-i18n="retrain.title">Reentrenador</h1>
-            <br>
-            <div class="col-md-4">
+            <div class="col-lg-5">
+                <div class="info-panel">
                 <h2 data-i18n="retrain.instructions">Instrucciones</h2>
                 <p data-i18n="retrain.follow_steps">Para reentrenar el modelo, sube un archivo CSV con los datos etiquetados correctamente.</p>
                 <ol class="text-start d-inline-block">
@@ -15,20 +15,17 @@
                     <li data-i18n="retrain.step_columns">Asegúrate de que el archivo contenga las columnas necesarias: ID, Label, Titulo, Descripcion, Fecha.</li>
                     <li data-i18n="retrain.step_upload">Haz clic en el botón para iniciar el reentrenamiento.</li>
                 </ol>
+                </div>
             </div>
 
-            <div class="col-md-4 text-end">
-                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid" width="300">
-            </div>
-
-            <div class="col-md-4 text-end">
-                <br>
+            <div class="col-lg-7 text-center">
+                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid hero-robot" width="300">
             </div>
         </div>
 
-        <h2 class="text-center" data-i18n="retrain.upload">Subir Archivo</h2>
-        <div class="card p-4 shadow-sm">
-            <form action="/retrain-submit" method="POST" enctype="multipart/form-data">
+        <h2 class="text-center mt-4" data-i18n="retrain.upload">Subir Archivo</h2>
+        <div class="card app-card p-4 shadow-sm">
+            <form action="/retrain-submit" method="POST" enctype="multipart/form-data" class="js-processing-form" data-loading-key="processing.retrain">
                 <div class="mb-3">
                     <label for="archivoEntrenamiento" class="form-label" data-i18n="retrain.select">Selecciona un archivo:</label>
                     <input class="form-control" type="file" name="file" id="file" required>
@@ -42,7 +39,7 @@
         {% if results %}
     <h2 data-i18n="retrain.results">Resultados del reentrenamiento:</h2>
     <div class="container mt-4">
-        <div class="card p-4 shadow-sm">
+        <div class="card app-card p-4 shadow-sm">
             <h3 class="mb-3" data-i18n="retrain.train_metrics">Métricas de Entrenamiento:</h3>
             <div class="row g-3">
                 <div class="col-md-3">
@@ -74,7 +71,7 @@
         
         <br>
         
-        <div class="card p-4 shadow-sm">
+        <div class="card app-card p-4 shadow-sm">
             <h3 class="mb-3" data-i18n="retrain.val_metrics">Métricas de Validación:</h3>
             <div class="row g-3">
                 <div class="col-md-3">

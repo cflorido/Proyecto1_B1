@@ -3,12 +3,12 @@
 {% block title %}Clasificar Archivo - Text Analytics{% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
+    <div class="container-xxl page-shell">
         <h1 class="text-center" data-i18n="file.title">Clasificador por Archivos</h1>
-        <br>
-        <div class="row">
+        <div class="row g-4 align-items-center mt-1">
 
-            <div class="col-md-4">
+            <div class="col-lg-5">
+                <div class="info-panel">
                 <h2 data-i18n="file.instructions">Instrucciones</h2>
                 <p data-i18n="file.follow_steps">Por favor, sigue estos pasos para subir y clasificar el archivo:</p>
                 <ol class="text-start d-inline-block">
@@ -16,20 +16,17 @@
                     <li data-i18n="file.step_columns">Asegúrate de que el archivo contenga las columnas necesarias.</li>
                     <li data-i18n="file.step_upload">Haz clic en el botón para subir y procesar el archivo.</li>
                 </ol>
+                </div>
             </div>
 
-            <div class="col-md-4 text-end">
-                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid" width="300">
-            </div>
-
-            <div class="col-md-4 text-end">
-                <br>
+            <div class="col-lg-7 text-center">
+                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid hero-robot" width="300">
             </div>
         </div>
 
-        <h2 class="text-center" data-i18n="file.upload">Subir Archivo</h2>
-        <div class="card p-4 shadow-sm">
-            <form action="/classify-file-submit" method="POST" enctype="multipart/form-data">
+        <h2 class="text-center mt-4" data-i18n="file.upload">Subir Archivo</h2>
+        <div class="card app-card p-4 shadow-sm">
+            <form action="/classify-file-submit" method="POST" enctype="multipart/form-data" class="js-processing-form" data-loading-key="processing.classify_file">
                 <div class="mb-3">
                     <label for="archivoEntrenamiento" class="form-label" data-i18n="file.select">Selecciona un archivo:</label>
                     <input class="form-control" type="file" name="file" id="file" required>
@@ -44,8 +41,8 @@
         <h2 class="text-center mt-4" data-i18n="file.results">Resultados de la Clasificación</h2>
         
         <div class="container mt-4">
-            <table class="table table-bordered table-striped">
-                <thead class="table-dark">
+            <table class="table table-bordered table-striped app-table">
+                <thead>
                     <tr>
                         <th data-i18n="file.col_title">Título</th>
                         <th data-i18n="file.col_body">Cuerpo</th>
