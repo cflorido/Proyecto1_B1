@@ -1,0 +1,7 @@
+{
+  "nav": {
+    "classify_one": "Classify One",
+    "classify_file": "Classify File",
+    "retrain": "Retrain Model"
+  }
+}

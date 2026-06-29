@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Clasificar Archivo - Text Analytics{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <h1 class="text-center" data-i18n="file.title">Clasificador por Archivos</h1>
+        <br>
+        <div class="row">
+
+            <div class="col-md-4">
+                <h2 data-i18n="file.instructions">Instrucciones</h2>
+                <p data-i18n="file.follow_steps">Por favor, sigue estos pasos para subir y clasificar el archivo:</p>
+                <ol class="text-start d-inline-block">
+                    <li data-i18n="file.step_csv">Selecciona un archivo en formato CSV desde tu dispositivo.</li>
+                    <li data-i18n="file.step_columns">Asegúrate de que el archivo contenga las columnas necesarias.</li>
+                    <li data-i18n="file.step_upload">Haz clic en el botón para subir y procesar el archivo.</li>
+                </ol>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid" width="300">
+            </div>
+
+            <div class="col-md-4 text-end">
+                <br>
+            </div>
+        </div>
+
+        <h2 class="text-center" data-i18n="file.upload">Subir Archivo</h2>
+        <div class="card p-4 shadow-sm">
+            <form action="/classify-file-submit" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="archivoEntrenamiento" class="form-label" data-i18n="file.select">Selecciona un archivo:</label>
+                    <input class="form-control" type="file" name="file" id="file" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom" data-i18n="file.button">Entrenar Con Archivo</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        {% if results %}
+        <h2 class="text-center mt-4" data-i18n="file.results">Resultados de la Clasificación</h2>
+        
+        <div class="container mt-4">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th data-i18n="file.col_title">Título</th>
+                        <th data-i18n="file.col_body">Cuerpo</th>
+                        <th data-i18n="file.col_class">Clasificación</th>
+                        <th data-i18n="file.col_prob_true">Probabilidad de Verdadera</th>
+                        <th data-i18n="file.col_prob_false">Probabilidad de Falsa</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for result in results %}
+                    <tr>
+                        <td>{{ result.titulo }}</td>
+                        <td>{{ result.cuerpo }}</td>
+                        <td>
+                            <span class="badge {% if result.clasificacion == 'Verdadero' %} bg-success {% else %} bg-danger {% endif %}">
+                                {{ result.clasificacion }}
+                            </span>
+                        </td>
+                        <td>{{ result.ProbVerdadera | round(2) }}</td>
+                        <td>{{ result.ProbFalsa | round(2) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <br>
+        </div>
+    {% endif %}
+
+    </div>
+{% endblock %}

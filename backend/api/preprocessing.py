@@ -2,16 +2,20 @@
 import pandas as pd
 import contractions
 import nltk
+from pathlib import Path
 from nltk import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import LancasterStemmer, WordNetLemmatizer, PorterStemmer, SnowballStemmer
 from nltk import word_tokenize, sent_tokenize
 import string
 nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
 import re
 import joblib
 
-vectorizer = joblib.load("vectorizer.joblib")
+BASE_DIR = Path(__file__).resolve().parent
+vectorizer = joblib.load(BASE_DIR / "vectorizer.joblib")
 
 def vectorization_function_transform(x):
     return vectorizer.transform(x).toarray()

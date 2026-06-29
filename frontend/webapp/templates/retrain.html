@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block title %}Reentrenar - Text Analytics{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <h1 class="text-center" data-i18n="retrain.title">Reentrenador</h1>
+            <br>
+            <div class="col-md-4">
+                <h2 data-i18n="retrain.instructions">Instrucciones</h2>
+                <p data-i18n="retrain.follow_steps">Para reentrenar el modelo, sube un archivo CSV con los datos etiquetados correctamente.</p>
+                <ol class="text-start d-inline-block">
+                    <li data-i18n="retrain.step_csv">Selecciona un archivo en formato CSV desde tu dispositivo.</li>
+                    <li data-i18n="retrain.step_columns">Asegúrate de que el archivo contenga las columnas necesarias: ID, Label, Titulo, Descripcion, Fecha.</li>
+                    <li data-i18n="retrain.step_upload">Haz clic en el botón para iniciar el reentrenamiento.</li>
+                </ol>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid" width="300">
+            </div>
+
+            <div class="col-md-4 text-end">
+                <br>
+            </div>
+        </div>
+
+        <h2 class="text-center" data-i18n="retrain.upload">Subir Archivo</h2>
+        <div class="card p-4 shadow-sm">
+            <form action="/retrain-submit" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="archivoEntrenamiento" class="form-label" data-i18n="retrain.select">Selecciona un archivo:</label>
+                    <input class="form-control" type="file" name="file" id="file" required>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-custom" data-i18n="retrain.button">Reentrenar</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        {% if results %}
+    <h2 data-i18n="retrain.results">Resultados del reentrenamiento:</h2>
+    <div class="container mt-4">
+        <div class="card p-4 shadow-sm">
+            <h3 class="mb-3" data-i18n="retrain.train_metrics">Métricas de Entrenamiento:</h3>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p>F1</p>
+                        <h4>{{ results.Train_F1 }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p data-i18n="retrain.recall">Recall</p>
+                        <h4>{{ results.Train_Recall }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p data-i18n="retrain.precision">Precisión</p>
+                        <h4>{{ results.Train_Precision }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p data-i18n="retrain.accuracy">Exactitud</p>
+                        <h4>{{ results.Train_Accuracy }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <br>
+        
+        <div class="card p-4 shadow-sm">
+            <h3 class="mb-3" data-i18n="retrain.val_metrics">Métricas de Validación:</h3>
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p>F1</p>
+                        <h4>{{ results.Val_F1 }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p data-i18n="retrain.recall">Recall</p>
+                        <h4>{{ results.Val_Recall }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p data-i18n="retrain.precision">Precisión</p>
+                        <h4>{{ results.Val_Precision }}</h4>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="result-card">
+                        <p data-i18n="retrain.accuracy">Exactitud</p>
+                        <h4>{{ results.Val_Accuracy }}</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+    <br>
+    </div>
+{% endblock %}

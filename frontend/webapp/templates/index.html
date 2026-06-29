@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Text Analytics{% endblock %}
+
+{% block content %}
+    <img src="{{ url_for('static', filename='banner.jpg') }}" class="img-fluid w-100" alt="Banner">
+    <br>
+    <br>
+    <div class="container mt-4">
+        <h1 class="text-left custom-title" data-i18n="home.title">Detectando Noticias Falsas</h1>
+        <h2 class="text-left custom-subtitle" data-i18n="home.subtitle">Asegurando información veraz y confiable</h2>
+        <br>
+        <p data-i18n="home.description">Esta aplicación utiliza un algoritmo de clasificación basado en Gradient Boosting para detectar noticias falsas en la política...</p>
+
+        <h2 class="text-left custom-h2" data-i18n="home.keywords">Palabras clave</h2>
+        <div class="row row-cols-2 g-3">
+            <div class="col">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='titulo_verdadera.png') }}" class="card-img-top" alt="Imagen 1">
+                    <div class="card-body">
+                        <h5 class="card-title" data-i18n="home.true_title">Palabras más comunes en Títulos</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <img src="{{ url_for('static', filename='cuerpo_verdadera.png') }}" class="card-img-top" alt="Imagen 2">
+                    <div class="card-body">
+                        <h5 class="card-title" data-i18n="home.true_body">Palabras más comunes en Cuerpos</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

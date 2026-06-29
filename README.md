@@ -1,85 +1,186 @@
-# Text Analytics Tools for Identifying Political Disinformation  
-This project aimed to design and implement a robust classification system to detect political disinformation in Spanish-language news articles. The work followed a complete data engineering and machine learning pipeline, from acquisition and preprocessing of raw data to the deployment of an operational application with retraining capabilities.
+# Text Analytics Tool
 
-The preprocessing stage included contraction expansion, case normalization, tokenization, stopword removal, non-ASCII filtering, noise elimination (punctuation and numbers), and lexical reduction through stemming and lemmatization. These steps ensured that the processed corpus was homogeneous, consistent, and semantically rich. Textual data was vectorized using the TF-IDF (Term Frequency–Inverse Document Frequency) technique, which allowed the extraction of discriminative features for classification.
+A professionalized repository structure for fake-news detection using a FastAPI backend and Flask frontend.
 
-Several algorithms were tested, including **Naïve Bayes** and **K-Nearest Neighbors**, but the final model was built using a **Gradient Boosting Classifier** optimized with GridSearchCV. This model was selected due to its superior performance in minimizing both bias and variance across cross-validation folds. The resulting pipeline integrates preprocessing, feature extraction, and classification into a single reproducible workflow, persisted for inference and retraining.
+## Frontend Quick Start (Recommended)
 
-The solution was deployed as a **RESTful API using FastAPI**, exposing three main endpoints:  
-1. **/predict/** – Individual news prediction.  
-2. **/predictMany/** – Batch classification from CSV files.  
-3. **/retrain/** – Model retraining with new labeled datasets, ensuring adaptability to emerging disinformation patterns.  
+If you only want to open the web UI fast:
 
-Finally, a web application was developed to provide users with an intuitive interface for testing predictions, uploading datasets, and visualizing results. The system is designed for use by journalists, fact-checkers, political analysts, and institutional stakeholders. By automating disinformation detection, it reduces manual workload, accelerates content verification processes, and supports evidence-based decision-making in contexts where the spread of false information can have a significant social impact.
+1. Install dependencies once.
+2. Run the one-command script.
+3. Open the frontend URL.
 
-## Documents
-- [Project Report – English](https://github.com/user-attachments/files/22415793/Project.Overview.pdf)
-- [Reporte del Proyecto – Español](https://github.com/user-attachments/files/22415794/Resumen.del.proyecto.pdf)
-
-## Presentations
-- [Presentation – English](https://github.com/user-attachments/files/22415820/Presentation.pdf)
-- [Presentacion – Español](https://github.com/user-attachments/files/22415815/Presentacion.pdf)
-
----
-
-## Authors
-- Natalia Villegas Calderón – 202113370  
-- Carol Sofía Florido Castro – 202111430  
-- Juan Martín Vásquez Cristancho – 202113314  
-
-Course: Business Intelligence – ISIS 3301  
-City: Bogotá, Colombia  
-Year: 2025  
-
----
-
-## Project Overview
-[Insert the English project overview here]  
-
-[Insert the Spanish project overview here]  
-
----
-
-## Repository Structure
-```bash
-Fase1/
-│── BI - Proyecto 1 Etapa 1.pdf
-│── LinkVideo.txt
-│── ModelosCode.ipynb
-│── modelo_GB_mejoresHiperparametros.pkl
-│── modelo_KNN_mejoresHiperparametros.pkl
-│── modelo_naiveBayes_SinSmote.pkl
-│── particion_prueba_estudiantes.csv
-│── tfidf_vectorizer.pkl
-
-Fase2/
-│── app.py
-│── ClasificarArchivo.csv
-│── Reentrenar.csv
-│── static/
-│── templates/
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
 ```
 
-## Technologies Used
-- Python 3.11  
-- scikit-learn, pandas, joblib, nltk, FastAPI  
-- Uvicorn (ASGI server)  
-- Deployment: Local / AWS / Google Cloud  
+Frontend URL: http://127.0.0.1:5000
 
+To stop all services:
 
----
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\stop-dev.ps1
+```
 
-## How to Run
-1. Install dependencies
-```bash
+Important:
+- This app uses a backend API. If backend is not running, pages open but classify/retrain actions will fail.
+
+## Project Structure
+
+```text
+Text-Analytics-Tool/
+├── backend/
+│   └── api/
+│       ├── main.py
+│       ├── preprocessing.py
+│       ├── pipeline.py
+│       ├── *.joblib
+│       └── *.py
+├── frontend/
+│   └── webapp/
+│       ├── app.py
+│       ├── templates/
+│       │   ├── base.html
+│       │   ├── index.html
+│       │   ├── classify.html
+│       │   ├── classify_file.html
+│       │   └── retrain.html
+│       ├── static/
+│       │   ├── js/i18n.js
+│       │   └── ...
+│       ├── classify_sample.csv
+│       └── retrain_sample.csv
+├── data/
+│   ├── fake_news_spanish.csv
+│   └── fake_news_test.csv
+├── docs/
+│   ├── phase1/
+│   └── phase2-project-report.pdf
+├── models/
+│   ├── gradient_boosting_legacy.joblib
+│   └── gradient_boosting_legacy.pkl
+├── notebooks/
+│   └── models-phase2-corrections.ipynb
+├── requirements.txt
+└── README.md
+```
+
+## Features
+
+- FastAPI backend for prediction and retraining endpoints.
+- Flask frontend with clean template inheritance.
+- Client-side i18n:
+  - auto-detects browser language (`en` -> English, otherwise Spanish)
+  - language switcher in the top-right corner.
+- Backward compatibility for old Spanish routes while exposing English routes.
+
+## Manual Run (Windows / PowerShell)
+
+### 1. Create and activate environment
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-2. Run the API
-```bash
-uvicorn app:app --reload
+### 2. Start backend (terminal 1)
+
+```powershell
+.\.venv\Scripts\python -m uvicorn backend.api.main:app --reload --port 8000
 ```
-3. Access at
-```bash
-http://127.0.0.1:8000
+
+### 3. Start frontend (terminal 2)
+
+```powershell
+.\.venv\Scripts\python frontend\webapp\app.py
 ```
+
+### 4. Optional: stop old Python servers before restart
+
+```powershell
+Get-Process python -ErrorAction SilentlyContinue | Stop-Process -Force
+```
+
+## One-Command Start/Stop Scripts
+
+Start backend + frontend:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
+```
+
+Stop backend + frontend:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\stop-dev.ps1
+```
+
+Logs are written to:
+
+- `.run\backend.log`
+- `.run\backend.err.log`
+- `.run\frontend.log`
+- `.run\frontend.err.log`
+
+### 5. Open the app
+
+- Frontend: http://127.0.0.1:5000
+- Backend: http://127.0.0.1:8000
+
+## Troubleshooting
+
+### Frontend does not open (ERR_CONNECTION_REFUSED)
+
+Run this exact command:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\start-dev.ps1
+```
+
+Then verify frontend:
+
+```powershell
+Invoke-WebRequest http://127.0.0.1:5000 -UseBasicParsing
+```
+
+If it still fails:
+
+```powershell
+Get-Content .\.run\frontend.err.log
+Get-Content .\.run\backend.err.log
+```
+
+### Error: `jinja2.exceptions.TemplateNotFound: index.html`
+
+Use these checks:
+
+1. Run the frontend with the new path only:
+
+```powershell
+.\.venv\Scripts\python frontend\webapp\app.py
+```
+
+2. Do not run old paths from the previous structure (for example `Fase 2\Front\app.py`).
+
+3. Confirm templates exist:
+
+```powershell
+Get-ChildItem frontend\webapp\templates
+```
+
+4. If needed, restart both services after killing old Python processes.
+
+## Notes
+
+- New English routes:
+  - `/classify`
+  - `/classify-file`
+  - `/retrain`
+- Legacy Spanish routes still work:
+  - `/clasificar`
+  - `/clasificarArchivo`
+  - `/reentreno`

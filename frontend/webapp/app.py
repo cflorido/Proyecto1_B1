@@ -1,35 +1,48 @@
 from flask import Flask, jsonify, render_template, request, send_from_directory
+from pathlib import Path
 import pandas as pd
 import requests
 
-app = Flask(__name__)
+BASE_DIR = Path(__file__).resolve().parent
+TEMPLATES_DIR = BASE_DIR / "templates"
+STATIC_DIR = BASE_DIR / "static"
+
+app = Flask(
+    __name__,
+    template_folder=str(TEMPLATES_DIR),
+    static_folder=str(STATIC_DIR),
+)
 API_URL = "http://127.0.0.1:8000"
 
-#------------Front------------------
+# ------------ Frontend Routes ------------
 @app.route('/')
 def home():
     return render_template('index.html')
 
+@app.route('/classify')
 @app.route('/clasificar')
-def clasificar():
-    return render_template('clasificar.html')
+def classify_page():
+    return render_template('classify.html')
 
+@app.route('/classify-file')
 @app.route('/clasificarArchivo')
-def clasificarArchivo():
-    return render_template('clasificarArchivo.html')
+def classify_file_page():
+    return render_template('classify_file.html')
 
+@app.route('/retrain')
 @app.route('/reentreno')
-def reentreno():
-    return render_template('reentreno.html')
+def retrain_page():
+    return render_template('retrain.html')
 
 @app.route('/favicon.ico')
 def favicon():
-    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+    return send_from_directory(app.static_folder, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
-#----------Interacción con el API-----------
+# ------------ API Interaction Routes ------------
 
+@app.route('/classify-submit', methods=["POST"])
 @app.route('/clasificarEnvio', methods=["POST"])
-def clasificarEnvio():
+def classify_submit():
     id_noticia = request.form.get("id")  
     titulo = request.form.get("titulo")
     cuerpo = request.form.get("cuerpo")
@@ -57,9 +70,9 @@ def clasificarEnvio():
     except requests.exceptions.RequestException:
         response_dict = {"error": "No se pudo conectar con la API"}
 
-    return render_template('clasificar.html', results=response_dict)
+    return render_template('classify.html', results=response_dict)
 
-def validar_archivo(file):
+def validate_file(file):
     """Verifica si el archivo es válido (CSV no vacío)"""
     if 'file' not in request.files:
         return "No ha enviado el archivo"
@@ -69,10 +82,11 @@ def validar_archivo(file):
         return "Solo se permiten archivos de tipo CSV"
     return None 
 
+@app.route('/classify-file-submit', methods=["POST"])
 @app.route('/clasificarEnvioArchivo', methods=["POST"])
-def clasificarEnvioArchivo():
+def classify_file_submit():
     file = request.files.get('file')
-    error = validar_archivo(file)
+    error = validate_file(file)
     if error:
         return jsonify({"error": error}), 400
 
@@ -100,10 +114,11 @@ def clasificarEnvioArchivo():
     except requests.exceptions.RequestException:
         return jsonify({"error": "No se pudo conectar con la API"}), 500
 
-    return render_template('clasificarArchivo.html', results=response_list)
+    return render_template('classify_file.html', results=response_list)
 
+@app.route('/retrain-submit', methods=["POST"])
 @app.route('/reentrenar', methods=["POST"])
-def reentrenarEnvioArchivo():
+def retrain_submit():
     file = request.files.get('file')
 
     if not file:
@@ -152,8 +167,8 @@ def reentrenarEnvioArchivo():
     except requests.exceptions.RequestException:
         return jsonify({"error": "No se pudo conectar con la API"}), 500
     
-    return render_template('reentreno.html', results=formatted_response)
+    return render_template('retrain.html', results=formatted_response)
 
-#----------Main--------------------------
+# ------------ Main ------------
 if __name__ == '__main__':
     app.run(debug=True)

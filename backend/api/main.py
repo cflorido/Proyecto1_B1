@@ -2,13 +2,17 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from joblib import load, dump
 import pandas as pd
+from pathlib import Path
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import precision_score, recall_score, f1_score, accuracy_score
 from sklearn.model_selection import train_test_split
-from preprocessing import dropna_and_combine_text, text_preprocessing_function, vectorization_function
 from typing import List
 
-pipeline = load("pipeline.joblib")
+BASE_DIR = Path(__file__).resolve().parent
+PIPELINE_PATH = BASE_DIR / "pipeline.joblib"
+MODEL_PATH = BASE_DIR / "model.joblib"
+
+pipeline = load(PIPELINE_PATH)
 
 
 app = FastAPI()
@@ -83,8 +87,8 @@ def retrain(data: list[RetrainData]):
 
 
     pipeline.steps[-1] = ("classification", new_model)
-    dump(pipeline, "pipeline.joblib")
-    dump(new_model, "model.joblib")
+    dump(pipeline, PIPELINE_PATH)
+    dump(new_model, MODEL_PATH)
     return {
         "Training Metrics": {
             "F1": train_f1,

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Clasificar - Text Analytics{% endblock %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <h1 class="text-center" data-i18n="classify.title">Clasificador</h1>
+            <br>
+            <div class="col-md-4">
+                <h2 data-i18n="classify.instructions">Instrucciones</h2>
+                <p data-i18n="classify.follow_steps">Por favor, sigue estos pasos para clasificar la noticia:</p>
+                <ol class="text-start d-inline-block">
+                    <li data-i18n="classify.step_title">Escribe el título de la noticia en el primer campo de texto.</li>
+                    <li data-i18n="classify.step_body">Escribe el cuerpo completo de la noticia en el segundo campo.</li>
+                    <li data-i18n="classify.step_click">Haz clic en el botón <strong data-i18n="classify.button">Clasificar</strong> para obtener el resultado.</li>
+                </ol>
+            </div>
+
+            <div class="col-md-4 text-end">
+                <img src="{{ url_for('static', filename='robot.png') }}" alt="Robot Clasificador" class="img-fluid" width="300">
+            </div>
+
+            <div class="col-md-4 text-end">
+                <br>
+            </div>
+        </div>
+        <h2 class="text-center" data-i18n="classify.enter">Ingrese</h2>
+        <br>
+        <form action="/classify-submit" method="POST">
+            <h3 class="text-left" data-i18n="classify.field_id">ID de la Noticia</h3>
+            <div class="mb-3">
+                <input type="text" class="form-control" name="id" value="ID" >
+            </div>
+
+            <h3 class="text-left" data-i18n="classify.field_date">Fecha de la Noticia</h3>
+            <div class="mb-3">
+                <input type="date" class="form-control" name="fecha" required>
+            </div>
+
+            <h3 class="text-left" data-i18n="classify.field_title">Título</h3>
+            <div class="mb-3">
+                <textarea class="form-control w-100" name="titulo" rows="2" placeholder="" required></textarea>
+            </div>
+
+            <h3 class="text-left" data-i18n="classify.field_body">Cuerpo de la noticia</h3>
+            <div class="mb-3">
+                <textarea class="form-control w-100" name="cuerpo" rows="5" placeholder="" required></textarea>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-custom" data-i18n="classify.button">Clasificar</button>
+            </div>
+            <br>
+        </form>
+        {% if results %}
+            <div class="card shadow-lg p-4 mt-4">
+                <h2 class="text-center mb-4" data-i18n="classify.results">Resultados de la Clasificación</h2>
+                <div class="mb-3">
+                    <h4 class="fw-bold text-dark" data-i18n="classify.title_label">Título:</h4>
+                    <p class="text-muted">{{ results.titulo }}</p>
+                </div>
+                <div class="mb-3">
+                    <h4 class="fw-bold text-dark" data-i18n="classify.body_label">Cuerpo:</h4>
+                    <p class="text-muted">{{ results.cuerpo }}</p>
+                </div>
+                <div class="mb-3">
+                    <h4 class="fw-bold text-dark" data-i18n="classify.class_label">Clasificación:</h4>
+                    <p class="{{ 'text-success' if results.clasificacion == 'Verdadero' else 'text-danger' }}">
+                        <strong>{{ results.clasificacion }}</strong>
+                    </p>
+                </div>
+                <div class="mb-3">
+                    <h4 class="fw-bold text-dark" data-i18n="classify.prob_true">Probabilidad de que la noticia sea Verdadera:</h4>
+                    <p class="badge bg-success fs-5">{{ "%.2f"|format(results.ProbVerdadera) }}</p>
+                </div>
+                <div class="mb-3">
+                    <h4 class="fw-bold text-dark" data-i18n="classify.prob_false">Probabilidad de que la noticia sea Falsa:</h4>
+                    <p class="badge bg-danger fs-5">{{ "%.2f"|format(results.ProbFalsa) }}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
